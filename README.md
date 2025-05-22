@@ -67,12 +67,6 @@ npm start
 
 ---
 
-## 🧪 Testes
-
-*Este projeto não possui testes automatizados incluídos até o momento.*
-
----
-
 ## 🛠️ Scripts Disponíveis
 
 - `npm start` – Inicia o servidor de desenvolvimento Expo.
@@ -99,7 +93,7 @@ npm start
 
 ## 🧑‍💻 Autor
 
-Desenvolvido por [Rafael Matias Schimidt](https://github.com/RafaelMatias1). Sinta-se à vontade para contribuir!
+Desenvolvido por [Rafael Matias Schimidt](https://github.com/RafaelMatias1).
 
 ---
 
