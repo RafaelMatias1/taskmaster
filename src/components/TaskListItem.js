@@ -26,31 +26,35 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
   return (
     <View style={styles.item}>
       <Text style={styles.title} numberOfLines={1}>{task.title}</Text>
-      <Text style={styles.description} numberOfLines={2}>{task.description}</Text>
-      <View style={styles.buttonRow}>
-        {kanban && (
-          <TouchableOpacity onPress={moveBack} disabled={task.status === 'todo'}>
-            <Text style={[styles.moveText, task.status === 'todo' && styles.disabled]}>◀️</Text>
+      {(size === 'medium' || size === 'large') && (
+        <Text style={styles.description} numberOfLines={2}>{task.description}</Text>
+      )}
+      {size === 'large' && (
+        <View style={styles.buttonRow}>
+          {kanban && (
+            <TouchableOpacity onPress={moveBack} disabled={task.status === 'todo'}>
+              <Text style={[styles.moveText, task.status === 'todo' && styles.disabled]}>◀️</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate('EditTask', { task })}
+          >
+            <Text style={styles.editText}>✏️</Text>
           </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => navigation.navigate('EditTask', { task })}
-        >
-          <Text style={styles.editText}>✏️</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => removeTask(task.id)}
-        >
-          <Text style={styles.deleteText}>❌</Text>
-        </TouchableOpacity>
-        {kanban && (
-          <TouchableOpacity onPress={moveForward} disabled={task.status === 'done'}>
-            <Text style={[styles.moveText, task.status === 'done' && styles.disabled]}>▶️</Text>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => removeTask(task.id)}
+          >
+            <Text style={styles.deleteText}>❌</Text>
           </TouchableOpacity>
-        )}
-      </View>
+          {kanban && (
+            <TouchableOpacity onPress={moveForward} disabled={task.status === 'done'}>
+              <Text style={[styles.moveText, task.status === 'done' && styles.disabled]}>▶️</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
     </View>
   );
 }
