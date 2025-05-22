@@ -36,6 +36,20 @@ export default function HomeScreen({ navigation }) {
     });
   }
 
+  // Função para renderizar o título da coluna com a bolinha indicadora acima do título
+  function renderKanbanColumnTitle(title, size) {
+    let indicatorStyle = styles.sizeIndicatorSmall;
+    if (size === 'medium') indicatorStyle = styles.sizeIndicatorMedium;
+    if (size === 'large') indicatorStyle = styles.sizeIndicatorLarge;
+
+    return (
+      <View style={styles.kanbanColumnTitleContainer}>
+        <View style={[styles.sizeIndicator, indicatorStyle]} />
+        <Text style={styles.kanbanColumnTitle}>{title}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -78,12 +92,12 @@ export default function HomeScreen({ navigation }) {
               styles.kanbanColumn,
               columnSizes.todo === 'large' && styles.kanbanColumnExpanded,
               columnSizes.todo === 'medium' && styles.kanbanColumnMedium,
-              columnSizes.todo === 'small' && styles.kanbanColumnCollapsed
+              columnSizes.todo === 'small' && styles.kanbanColumnCollapsed,
             ]}
             onPress={() => toggleColumnSize('todo')}
             accessibilityLabel="Expandir ou reduzir coluna A Fazer"
           >
-            <Text style={styles.kanbanColumnTitle}>A Fazer</Text>
+            {renderKanbanColumnTitle('A Fazer', columnSizes.todo)}
             <ScrollView style={styles.kanbanList}>
               {tasks
                 .filter(t => t.status === 'todo' && !t.welcome)
@@ -104,12 +118,12 @@ export default function HomeScreen({ navigation }) {
               styles.kanbanColumn,
               columnSizes.doing === 'large' && styles.kanbanColumnExpanded,
               columnSizes.doing === 'medium' && styles.kanbanColumnMedium,
-              columnSizes.doing === 'small' && styles.kanbanColumnCollapsed
+              columnSizes.doing === 'small' && styles.kanbanColumnCollapsed,
             ]}
             onPress={() => toggleColumnSize('doing')}
             accessibilityLabel="Expandir ou reduzir coluna Em Progresso"
           >
-            <Text style={styles.kanbanColumnTitle}>Em Progresso</Text>
+            {renderKanbanColumnTitle('Em Progresso', columnSizes.doing)}
             <ScrollView style={styles.kanbanList}>
               {tasks
                 .filter(t => t.status === 'doing' && !t.welcome)
@@ -130,12 +144,12 @@ export default function HomeScreen({ navigation }) {
               styles.kanbanColumn,
               columnSizes.done === 'large' && styles.kanbanColumnExpanded,
               columnSizes.done === 'medium' && styles.kanbanColumnMedium,
-              columnSizes.done === 'small' && styles.kanbanColumnCollapsed
+              columnSizes.done === 'small' && styles.kanbanColumnCollapsed,
             ]}
             onPress={() => toggleColumnSize('done')}
             accessibilityLabel="Expandir ou reduzir coluna Concluída"
           >
-            <Text style={styles.kanbanColumnTitle}>Concluída</Text>
+            {renderKanbanColumnTitle('Concluída', columnSizes.done)}
             <ScrollView style={styles.kanbanList}>
               {tasks
                 .filter(t => t.status === 'done' && !t.welcome)
@@ -238,11 +252,34 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     zIndex: 1,
   },
+  kanbanColumnTitleContainer: {
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   kanbanColumnTitle: {
     fontWeight: 'bold',
     fontSize: width * 0.04,
-    marginBottom: 8,
     alignSelf: 'center',
+  },
+  sizeIndicator: {
+    marginBottom: 6,
+    borderRadius: 50,
+    backgroundColor: '#888',
+  },
+  sizeIndicatorSmall: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#bdbdbd',
+  },
+  sizeIndicatorMedium: {
+    width: 18,
+    height: 18,
+    backgroundColor: '#ffb300',
+  },
+  sizeIndicatorLarge: {
+    width: 28,
+    height: 28,
+    backgroundColor: '#388e3c',
   },
   kanbanList: {
     flexGrow: 1,

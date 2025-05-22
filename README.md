@@ -103,8 +103,3 @@ Desenvolvido por [Rafael Matias Schimidt](https://github.com/RafaelMatias1). Sin
 
 ---
 
-## 📄 Licença
-
-Este projeto está licenciado sob a [MIT License](LICENSE).
-
----
