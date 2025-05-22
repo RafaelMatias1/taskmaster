@@ -8,8 +8,21 @@ export default function HomeScreen({ navigation }) {
   const { user, logout } = useAuth();
   const { tasks, viewMode, setViewMode } = useTasks();
 
-  // Estado para saber qual coluna está expandida
-  const [expandedColumn, setExpandedColumn] = useState(null); // 'todo', 'doing', 'done' ou null
+  // Estado para o tamanho de cada coluna
+  const [columnSizes, setColumnSizes] = useState({
+    todo: 'small',    // 'small', 'medium', 'large'
+    doing: 'small',
+    done: 'small'
+  });
+
+  function toggleColumnSize(column) {
+    setColumnSizes(prev => {
+      const order = ['small', 'medium', 'large'];
+      const current = prev[column];
+      const next = order[(order.indexOf(current) + 1) % order.length];
+      return { ...prev, [column]: next };
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -47,63 +60,75 @@ export default function HomeScreen({ navigation }) {
             activeOpacity={0.95}
             style={[
               styles.kanbanColumn,
-              expandedColumn === 'todo' && styles.kanbanColumnExpanded,
-              expandedColumn && expandedColumn !== 'todo' && styles.kanbanColumnCollapsed
+              columnSizes.todo === 'large' && styles.kanbanColumnExpanded,
+              columnSizes.todo === 'medium' && styles.kanbanColumnMedium,
+              columnSizes.todo === 'small' && styles.kanbanColumnCollapsed
             ]}
-            onPress={() => setExpandedColumn(expandedColumn === 'todo' ? null : 'todo')}
+            onPress={() => toggleColumnSize('todo')}
           >
             <Text style={styles.kanbanColumnTitle}>
-              A Fazer {expandedColumn === 'todo' ? '⬅️' : ''}
+              A Fazer {columnSizes.todo === 'large' ? '⬅️' : columnSizes.todo === 'medium' ? '⬅' : ''}
             </Text>
-            {(expandedColumn === null || expandedColumn === 'todo') && (
-              <ScrollView style={styles.kanbanList}>
-                {tasks.filter(t => t.status === 'todo').map(task => (
-                  <TaskListItem key={task.id} task={task} kanban={true} />
-                ))}
-              </ScrollView>
-            )}
+            <ScrollView style={styles.kanbanList}>
+              {tasks.filter(t => t.status === 'todo').map(task => (
+                <TaskListItem
+                  key={task.id}
+                  task={task}
+                  kanban={true}
+                  size={columnSizes.todo}
+                />
+              ))}
+            </ScrollView>
           </TouchableOpacity>
           {/* Coluna Em Progresso */}
           <TouchableOpacity
             activeOpacity={0.95}
             style={[
               styles.kanbanColumn,
-              expandedColumn === 'doing' && styles.kanbanColumnExpanded,
-              expandedColumn && expandedColumn !== 'doing' && styles.kanbanColumnCollapsed
+              columnSizes.doing === 'large' && styles.kanbanColumnExpanded,
+              columnSizes.doing === 'medium' && styles.kanbanColumnMedium,
+              columnSizes.doing === 'small' && styles.kanbanColumnCollapsed
             ]}
-            onPress={() => setExpandedColumn(expandedColumn === 'doing' ? null : 'doing')}
+            onPress={() => toggleColumnSize('doing')}
           >
             <Text style={styles.kanbanColumnTitle}>
-              Em Progresso {expandedColumn === 'doing' ? '⬅️' : ''}
+              Em Progresso {columnSizes.doing === 'large' ? '⬅️' : columnSizes.doing === 'medium' ? '⬅' : ''}
             </Text>
-            {(expandedColumn === null || expandedColumn === 'doing') && (
-              <ScrollView style={styles.kanbanList}>
-                {tasks.filter(t => t.status === 'doing').map(task => (
-                  <TaskListItem key={task.id} task={task} kanban={true} />
-                ))}
-              </ScrollView>
-            )}
+            <ScrollView style={styles.kanbanList}>
+              {tasks.filter(t => t.status === 'doing').map(task => (
+                <TaskListItem
+                  key={task.id}
+                  task={task}
+                  kanban={true}
+                  size={columnSizes.doing}
+                />
+              ))}
+            </ScrollView>
           </TouchableOpacity>
           {/* Coluna Concluída */}
           <TouchableOpacity
             activeOpacity={0.95}
             style={[
               styles.kanbanColumn,
-              expandedColumn === 'done' && styles.kanbanColumnExpanded,
-              expandedColumn && expandedColumn !== 'done' && styles.kanbanColumnCollapsed
+              columnSizes.done === 'large' && styles.kanbanColumnExpanded,
+              columnSizes.done === 'medium' && styles.kanbanColumnMedium,
+              columnSizes.done === 'small' && styles.kanbanColumnCollapsed
             ]}
-            onPress={() => setExpandedColumn(expandedColumn === 'done' ? null : 'done')}
+            onPress={() => toggleColumnSize('done')}
           >
             <Text style={styles.kanbanColumnTitle}>
-              Concluída {expandedColumn === 'done' ? '⬅️' : ''}
+              Concluída {columnSizes.done === 'large' ? '⬅️' : columnSizes.done === 'medium' ? '⬅' : ''}
             </Text>
-            {(expandedColumn === null || expandedColumn === 'done') && (
-              <ScrollView style={styles.kanbanList}>
-                {tasks.filter(t => t.status === 'done').map(task => (
-                  <TaskListItem key={task.id} task={task} kanban={true} />
-                ))}
-              </ScrollView>
-            )}
+            <ScrollView style={styles.kanbanList}>
+              {tasks.filter(t => t.status === 'done').map(task => (
+                <TaskListItem
+                  key={task.id}
+                  task={task}
+                  kanban={true}
+                  size={columnSizes.done}
+                />
+              ))}
+            </ScrollView>
           </TouchableOpacity>
         </View>
       )}
@@ -177,11 +202,16 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   kanbanColumnExpanded: {
-    flex: 3, // 60% aproximadamente
+    flex: 3, // grande
     zIndex: 2,
   },
+  kanbanColumnMedium: {
+    flex: 2, // médio
+    zIndex: 1,
+    opacity: 0.85,
+  },
   kanbanColumnCollapsed: {
-    flex: 1,
+    flex: 1, // pequeno
     opacity: 0.6,
     zIndex: 1,
   },

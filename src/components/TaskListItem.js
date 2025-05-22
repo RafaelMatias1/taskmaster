@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const statusOrder = ['todo', 'doing', 'done'];
 
-export default function TaskListItem({ task, kanban }) {
+export default function TaskListItem({ task, kanban, size = 'large' }) {
   const { removeTask, updateTask } = useTasks();
   const navigation = useNavigation();
 
