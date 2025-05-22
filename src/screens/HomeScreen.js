@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../contexts/TaskContext';
@@ -6,7 +6,7 @@ import TaskListItem from '../components/TaskListItem';
 
 export default function HomeScreen({ navigation }) {
   const { user, logout } = useAuth();
-  const { tasks, viewMode, setViewMode } = useTasks();
+  const { tasks, viewMode, setViewMode, addTask } = useTasks();
 
   // Estado para o tamanho de cada coluna
   const [columnSizes, setColumnSizes] = useState({
@@ -14,6 +14,18 @@ export default function HomeScreen({ navigation }) {
     doing: 'small',
     done: 'small'
   });
+
+  useEffect(() => {
+    // Só cria a task de boas-vindas se não houver nenhuma task de boas-vindas já criada
+    if (!tasks.some(t => t.welcome)) {
+      addTask({
+        title: 'Bem-vindo ao TaskMaster!',
+        description: 'Toque no botão "+" para criar sua primeira tarefa. Você pode editar ou excluir tarefas a qualquer momento.',
+        status: 'todo',
+        welcome: true
+      });
+    }
+  }, [tasks, addTask]);
 
   function toggleColumnSize(column) {
     setColumnSizes(prev => {
@@ -28,7 +40,7 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcome}>Bem-vindo, {user?.name}!</Text>
-        <Button title="Sair" onPress={logout} />
+        <Button title="Perfil" onPress={() => navigation.navigate('Profile')} />
       </View>
 
       <View style={styles.viewModeSelector}>
@@ -67,17 +79,19 @@ export default function HomeScreen({ navigation }) {
             onPress={() => toggleColumnSize('todo')}
           >
             <Text style={styles.kanbanColumnTitle}>
-              A Fazer {columnSizes.todo === 'large' ? '⬅️' : columnSizes.todo === 'medium' ? '⬅' : ''}
+              A Fazer {columnSizes.todo === 'large' ? '' : columnSizes.todo === 'medium' ? '' : ''}
             </Text>
             <ScrollView style={styles.kanbanList}>
-              {tasks.filter(t => t.status === 'todo').map(task => (
-                <TaskListItem
-                  key={task.id}
-                  task={task}
-                  kanban={true}
-                  size={columnSizes.todo}
-                />
-              ))}
+              {tasks
+                .filter(t => t.status === 'todo' && !t.welcome)
+                .map(task => (
+                  <TaskListItem
+                    key={task.id}
+                    task={task}
+                    kanban={true}
+                    size={columnSizes.todo}
+                  />
+                ))}
             </ScrollView>
           </TouchableOpacity>
           {/* Coluna Em Progresso */}
@@ -92,17 +106,19 @@ export default function HomeScreen({ navigation }) {
             onPress={() => toggleColumnSize('doing')}
           >
             <Text style={styles.kanbanColumnTitle}>
-              Em Progresso {columnSizes.doing === 'large' ? '⬅️' : columnSizes.doing === 'medium' ? '⬅' : ''}
+              Em Progresso {columnSizes.doing === 'large' ? '' : columnSizes.doing === 'medium' ? '' : ''}
             </Text>
             <ScrollView style={styles.kanbanList}>
-              {tasks.filter(t => t.status === 'doing').map(task => (
-                <TaskListItem
-                  key={task.id}
-                  task={task}
-                  kanban={true}
-                  size={columnSizes.doing}
-                />
-              ))}
+              {tasks
+                .filter(t => t.status === 'doing' && !t.welcome)
+                .map(task => (
+                  <TaskListItem
+                    key={task.id}
+                    task={task}
+                    kanban={true}
+                    size={columnSizes.doing}
+                  />
+                ))}
             </ScrollView>
           </TouchableOpacity>
           {/* Coluna Concluída */}
@@ -117,17 +133,19 @@ export default function HomeScreen({ navigation }) {
             onPress={() => toggleColumnSize('done')}
           >
             <Text style={styles.kanbanColumnTitle}>
-              Concluída {columnSizes.done === 'large' ? '⬅️' : columnSizes.done === 'medium' ? '⬅' : ''}
+              Concluída {columnSizes.done === 'large' ? '' : columnSizes.done === 'medium' ? '' : ''}
             </Text>
             <ScrollView style={styles.kanbanList}>
-              {tasks.filter(t => t.status === 'done').map(task => (
-                <TaskListItem
-                  key={task.id}
-                  task={task}
-                  kanban={true}
-                  size={columnSizes.done}
-                />
-              ))}
+              {tasks
+                .filter(t => t.status === 'done' && !t.welcome)
+                .map(task => (
+                  <TaskListItem
+                    key={task.id}
+                    task={task}
+                    kanban={true}
+                    size={columnSizes.done}
+                  />
+                ))}
             </ScrollView>
           </TouchableOpacity>
         </View>

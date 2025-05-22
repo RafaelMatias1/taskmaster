@@ -6,16 +6,16 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState([]); // Armazena usuários cadastrados
 
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      if (email === 'teste@email.com' && password === '123456') {
-        const userData = { name: 'Usuário Teste', email, token: 'mock-token-123' };
-        setUser(userData);
-        return userData;
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const found = users.find(u => u.email === email && u.password === password);
+      if (found) {
+        setUser(found);
+        return found;
       } else {
         throw new Error('Credenciais inválidas');
       }
@@ -30,16 +30,37 @@ export function AuthProvider({ children }) {
   const register = async (name, email, password) => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const userData = { name, email, token: 'mock-token-456' };
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (users.find(u => u.email === email)) {
+        throw new Error('E-mail já cadastrado');
+      }
+      const userData = { name, email, password, token: 'mock-token-' + Date.now() };
+      setUsers(prev => [...prev, userData]);
       setUser(userData);
       return userData;
     } catch (error) {
-      Alert.alert('Erro', 'Ocorreu um erro ao registrar');
+      Alert.alert('Erro', error.message || 'Ocorreu um erro ao registrar');
       throw error;
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const updateUser = (newUserData) => {
+    setUsers(prev =>
+      prev.map(u =>
+        u.email === user.email ? { ...u, ...newUserData } : u
+      )
+    );
+    setUser(prev => ({
+      ...prev,
+      ...newUserData
+    }));
+  };
+
+  const deleteUser = () => {
+    setUsers(prev => prev.filter(u => u.email !== user.email));
+    setUser(null);
   };
 
   const logout = () => {
@@ -47,7 +68,15 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{
+      user,
+      isLoading,
+      login,
+      register,
+      logout,
+      updateUser,
+      deleteUser
+    }}>
       {children}
     </AuthContext.Provider>
   );

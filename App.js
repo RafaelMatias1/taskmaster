@@ -7,6 +7,7 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TaskFormScreen from './src/screens/TaskFormScreen';
 import { TaskProvider } from './src/contexts/TaskContext';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ function Routes() {
     >
       {user ? (
         <>
+          <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen 
             name="AddTask" 
