@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../contexts/TaskContext';
 import TaskListItem from '../components/TaskListItem';
+
+const { width } = Dimensions.get('window');
 
 export default function HomeScreen({ navigation }) {
   const { user, logout } = useAuth();
   const { tasks, viewMode, setViewMode, addTask } = useTasks();
 
-  // Estado para o tamanho de cada coluna
   const [columnSizes, setColumnSizes] = useState({
-    todo: 'small',    // 'small', 'medium', 'large'
+    todo: 'small',
     doing: 'small',
     done: 'small'
   });
 
   useEffect(() => {
-    // Só cria a task de boas-vindas se não houver nenhuma task de boas-vindas já criada
     if (!tasks.some(t => t.welcome)) {
       addTask({
         title: 'Bem-vindo ao TaskMaster!',
@@ -47,12 +47,16 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.viewModeButton, viewMode === 'list' && styles.activeViewMode]}
           onPress={() => setViewMode('list')}
+          accessibilityLabel="Visualizar em lista"
+          activeOpacity={0.7}
         >
           <Text style={viewMode === 'list' ? styles.activeText : styles.inactiveText}>Lista</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.viewModeButton, viewMode === 'kanban' && styles.activeViewMode]}
           onPress={() => setViewMode('kanban')}
+          accessibilityLabel="Visualizar em kanban"
+          activeOpacity={0.7}
         >
           <Text style={viewMode === 'kanban' ? styles.activeText : styles.inactiveText}>Kanban</Text>
         </TouchableOpacity>
@@ -77,10 +81,9 @@ export default function HomeScreen({ navigation }) {
               columnSizes.todo === 'small' && styles.kanbanColumnCollapsed
             ]}
             onPress={() => toggleColumnSize('todo')}
+            accessibilityLabel="Expandir ou reduzir coluna A Fazer"
           >
-            <Text style={styles.kanbanColumnTitle}>
-              A Fazer {columnSizes.todo === 'large' ? '' : columnSizes.todo === 'medium' ? '' : ''}
-            </Text>
+            <Text style={styles.kanbanColumnTitle}>A Fazer</Text>
             <ScrollView style={styles.kanbanList}>
               {tasks
                 .filter(t => t.status === 'todo' && !t.welcome)
@@ -104,10 +107,9 @@ export default function HomeScreen({ navigation }) {
               columnSizes.doing === 'small' && styles.kanbanColumnCollapsed
             ]}
             onPress={() => toggleColumnSize('doing')}
+            accessibilityLabel="Expandir ou reduzir coluna Em Progresso"
           >
-            <Text style={styles.kanbanColumnTitle}>
-              Em Progresso {columnSizes.doing === 'large' ? '' : columnSizes.doing === 'medium' ? '' : ''}
-            </Text>
+            <Text style={styles.kanbanColumnTitle}>Em Progresso</Text>
             <ScrollView style={styles.kanbanList}>
               {tasks
                 .filter(t => t.status === 'doing' && !t.welcome)
@@ -131,10 +133,9 @@ export default function HomeScreen({ navigation }) {
               columnSizes.done === 'small' && styles.kanbanColumnCollapsed
             ]}
             onPress={() => toggleColumnSize('done')}
+            accessibilityLabel="Expandir ou reduzir coluna Concluída"
           >
-            <Text style={styles.kanbanColumnTitle}>
-              Concluída {columnSizes.done === 'large' ? '' : columnSizes.done === 'medium' ? '' : ''}
-            </Text>
+            <Text style={styles.kanbanColumnTitle}>Concluída</Text>
             <ScrollView style={styles.kanbanList}>
               {tasks
                 .filter(t => t.status === 'done' && !t.welcome)
@@ -154,6 +155,8 @@ export default function HomeScreen({ navigation }) {
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('AddTask')}
+        accessibilityLabel="Adicionar nova tarefa"
+        activeOpacity={0.7}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
@@ -164,28 +167,29 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: width * 0.04,
     backgroundColor: '#f5f5f5',
-    marginTop: 30,
+    marginTop: Platform.OS === 'ios' ? 40 : 30,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: width * 0.05,
   },
   welcome: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     fontWeight: 'bold',
   },
   viewModeSelector: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: width * 0.05,
     gap: 10,
   },
   viewModeButton: {
-    padding: 10,
+    paddingVertical: width * 0.025,
+    paddingHorizontal: width * 0.06,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#ddd',
@@ -196,46 +200,47 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: '#fff',
+    fontWeight: 'bold',
   },
   inactiveText: {
     color: '#000',
   },
   listContent: {
-    paddingBottom: 20,
+    paddingBottom: width * 0.1,
   },
   kanbanContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingBottom: 16,
+    paddingBottom: width * 0.04,
   },
   kanbanColumn: {
     flex: 1,
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
-    padding: 8,
+    padding: width * 0.02,
     marginHorizontal: 4,
     minHeight: 100,
     maxHeight: '100%',
   },
   kanbanColumnExpanded: {
-    flex: 3, // grande
+    flex: 3,
     zIndex: 2,
   },
   kanbanColumnMedium: {
-    flex: 2, // médio
+    flex: 2,
     zIndex: 1,
     opacity: 0.85,
   },
   kanbanColumnCollapsed: {
-    flex: 1, // pequeno
+    flex: 1,
     opacity: 0.6,
     zIndex: 1,
   },
   kanbanColumnTitle: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: width * 0.04,
     marginBottom: 8,
     alignSelf: 'center',
   },
@@ -247,16 +252,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: '#6200ee',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
+      android: {},
+    }),
   },
   addButtonText: {
-    fontSize: 24,
+    fontSize: 32,
     color: '#fff',
+    fontWeight: 'bold',
   },
 });

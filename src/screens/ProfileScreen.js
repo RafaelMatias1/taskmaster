@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Dimensions } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { MaterialIcons, Feather } from '@expo/vector-icons';
+
+const { width } = Dimensions.get('window');
 
 export default function ProfileScreen({ navigation }) {
   const { user, updateUser, deleteUser, logout } = useAuth();
@@ -40,7 +42,7 @@ export default function ProfileScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Feather name="user" size={48} color="#6200ee" style={{ alignSelf: 'center', marginBottom: 10 }} />
+        <Feather name="user" size={width * 0.13} color="#6200ee" style={{ alignSelf: 'center', marginBottom: 10 }} />
         <Text style={styles.title}>Meu Perfil</Text>
         {editing ? (
           <>
@@ -96,21 +98,26 @@ export default function ProfileScreen({ navigation }) {
           </>
         )}
       </View>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.logoutButton} onPress={logout} accessibilityLabel="Sair da conta" activeOpacity={0.7}>
+        <Feather name="log-out" size={20} color="#fff" />
+        <Text style={styles.logoutButtonText}>Sair</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
         <Feather name="arrow-left" size={20} color="#fff" />
         <Text style={styles.backButtonText}>Voltar</Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5', alignItems: 'center', justifyContent: 'center', padding: 24 },
+  container: { flex: 1, backgroundColor: '#f5f5f5', alignItems: 'center', justifyContent: 'center', padding: width * 0.06 },
   card: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 28,
-    width: 320,
+    padding: width * 0.07,
+    width: width > 400 ? 360 : '100%',
+    maxWidth: 400,
     shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -118,19 +125,19 @@ const styles = StyleSheet.create({
     elevation: 4,
     alignItems: 'stretch',
   },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#222', alignSelf: 'center', marginBottom: 18 },
-  label: { fontWeight: 'bold', color: '#6200ee', marginTop: 8, marginBottom: 2 },
+  title: { fontSize: width * 0.055, fontWeight: 'bold', color: '#222', alignSelf: 'center', marginBottom: 18 },
+  label: { fontWeight: 'bold', color: '#6200ee', marginTop: 8, marginBottom: 2, fontSize: width * 0.038 },
   infoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10, gap: 8 },
-  info: { fontSize: 16, color: '#222', marginLeft: 6 },
+  info: { fontSize: width * 0.042, color: '#222', marginLeft: 6 },
   input: {
     borderWidth: 1,
     borderColor: '#6200ee',
     borderRadius: 8,
-    padding: 10,
+    padding: width * 0.035,
     marginBottom: 10,
     backgroundColor: '#fafafa',
     color: '#222',
-    fontSize: 16,
+    fontSize: width * 0.042,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -151,7 +158,7 @@ const styles = StyleSheet.create({
   editButtonText: {
     color: '#333',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: width * 0.042,
     marginLeft: 6,
   },
   saveButton: {
@@ -166,7 +173,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: width * 0.042,
     marginLeft: 6,
   },
   cancelButton: {
@@ -180,7 +187,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: '#333',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: width * 0.042,
     marginLeft: 6,
   },
   deleteButton: {
@@ -195,11 +202,27 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: width * 0.042,
     marginLeft: 6,
   },
+  logoutButton: {
+    marginTop: 24,
+    backgroundColor: '#888',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 36,
+    borderRadius: 10,
+    alignSelf: 'center',
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: width * 0.045,
+    marginLeft: 10,
+  },
   backButton: {
-    marginTop: 28,
+    marginTop: 18,
     backgroundColor: '#6200ee',
     flexDirection: 'row',
     alignItems: 'center',
@@ -211,7 +234,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: width * 0.045,
     marginLeft: 10,
   },
 });
