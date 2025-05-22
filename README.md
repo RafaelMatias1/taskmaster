@@ -42,7 +42,7 @@ taskmaster/
 
 ### Pré-requisitos
 
-- Node.js
+- Node.js  (`v22.14.0`)
 - Expo CLI (`npm install -g expo-cli`)
 
 ### Passos
@@ -85,7 +85,8 @@ npm start
   "expo": "~50.x",
   "react-navigation": "^6.x",
   "react-native-screens": "~3.x",
-  "react-native-gesture-handler": "~2.x"
+  "react-native-gesture-handler": "~2.x",
+  "node": "v22.14.0", 
 }
 ```
 
