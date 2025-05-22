@@ -5,25 +5,31 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAuth } from '../contexts/AuthContext';
 
+// Pega a largura da tela para responsividade
 const { width } = Dimensions.get('window');
 
+// Esquema de validação dos campos usando Yup
 const schema = yup.object().shape({
   name: yup.string().required('Informe o nome'),
   email: yup.string().required('Informe o e-mail').email('E-mail inválido'),
   password: yup.string().required('Informe a senha').min(6, 'Mínimo 6 caracteres'),
 });
 
+// Tela de registro do app
 export default function RegisterScreen({ navigation }) {
   const { register } = useAuth();
+
+  // Hook do react-hook-form para controle dos campos e validação
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
 
+  // Função chamada ao enviar o formulário
   const onSubmit = async (data) => {
     try {
       await register(data.name, data.email, data.password);
     } catch (error) {
-      // Tratado no contexto
+      // Erro tratado no contexto de autenticação
     }
   };
 
@@ -34,9 +40,11 @@ export default function RegisterScreen({ navigation }) {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
+          {/* Título e subtítulo */}
           <Text style={styles.title}>Criar Conta</Text>
           <Text style={styles.subtitle}>Preencha os campos para se registrar</Text>
 
+          {/* Campo de nome */}
           <Text style={styles.label}>Nome</Text>
           <Controller control={control} name="name"
             render={({ field: { onChange, value } }) => (
@@ -52,6 +60,7 @@ export default function RegisterScreen({ navigation }) {
           />
           {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
 
+          {/* Campo de e-mail */}
           <Text style={styles.label}>Email</Text>
           <Controller control={control} name="email"
             render={({ field: { onChange, value } }) => (
@@ -70,6 +79,7 @@ export default function RegisterScreen({ navigation }) {
           />
           {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
+          {/* Campo de senha */}
           <Text style={styles.label}>Senha</Text>
           <Controller control={control} name="password"
             render={({ field: { onChange, value } }) => (
@@ -87,6 +97,7 @@ export default function RegisterScreen({ navigation }) {
           />
           {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
+          {/* Botão de registro */}
           <TouchableOpacity
             style={styles.button}
             onPress={handleSubmit(onSubmit)}
@@ -96,6 +107,7 @@ export default function RegisterScreen({ navigation }) {
             <Text style={styles.buttonText}>Registrar</Text>
           </TouchableOpacity>
 
+          {/* Link para tela de login */}
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => navigation.navigate('Login')}
@@ -112,6 +124,7 @@ export default function RegisterScreen({ navigation }) {
   );
 }
 
+// Estilos da tela de registro
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,

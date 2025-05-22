@@ -5,24 +5,30 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAuth } from '../contexts/AuthContext';
 
+// Pega a largura da tela para responsividade
 const { width } = Dimensions.get('window');
 
+// Esquema de validação dos campos usando Yup
 const schema = yup.object().shape({
   email: yup.string().required('Informe o e-mail').email('E-mail inválido'),
   password: yup.string().required('Informe a senha').min(6, 'Mínimo 6 caracteres'),
 });
 
+// Tela de login do app
 export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
+
+  // Hook do react-hook-form para controle dos campos e validação
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
 
+  // Função chamada ao enviar o formulário
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
     } catch (error) {
-      // Tratado no contexto
+      // Erro tratado no contexto de autenticação
     }
   };
 
@@ -33,9 +39,11 @@ export default function LoginScreen({ navigation }) {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
+          {/* Título e subtítulo */}
           <Text style={styles.title}>TaskMaster</Text>
           <Text style={styles.subtitle}>Faça login para continuar</Text>
 
+          {/* Campo de e-mail */}
           <Text style={styles.label}>Email</Text>
           <Controller control={control} name="email"
             render={({ field: { onChange, value } }) => (
@@ -54,6 +62,7 @@ export default function LoginScreen({ navigation }) {
           />
           {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
+          {/* Campo de senha */}
           <Text style={styles.label}>Senha</Text>
           <Controller control={control} name="password"
             render={({ field: { onChange, value } }) => (
@@ -71,6 +80,7 @@ export default function LoginScreen({ navigation }) {
           />
           {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
+          {/* Botão de login */}
           <TouchableOpacity
             style={styles.button}
             onPress={handleSubmit(onSubmit)}
@@ -80,6 +90,7 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
 
+          {/* Link para tela de registro */}
           <TouchableOpacity
             style={styles.registerButton}
             onPress={() => navigation.navigate('Register')}
@@ -96,6 +107,7 @@ export default function LoginScreen({ navigation }) {
   );
 }
 
+// Estilos da tela de login
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,

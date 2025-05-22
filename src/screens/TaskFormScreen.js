@@ -3,12 +3,16 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions, Platfo
 import { useForm, Controller } from 'react-hook-form';
 import { useTasks } from '../contexts/TaskContext';
 
+// Pega a largura da tela para responsividade
 const { width } = Dimensions.get('window');
 
+// Tela de formulário para criar ou editar tarefa
 export default function TaskFormScreen({ route, navigation }) {
   const { addTask, updateTask } = useTasks();
+  // Recebe a tarefa a ser editada (se houver)
   const task = route.params?.task;
 
+  // Hook do react-hook-form para controle dos campos
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
       title: task ? task.title : '',
@@ -16,6 +20,7 @@ export default function TaskFormScreen({ route, navigation }) {
     },
   });
 
+  // Atualiza os campos se for edição
   useEffect(() => {
     if (task) {
       reset({
@@ -25,6 +30,7 @@ export default function TaskFormScreen({ route, navigation }) {
     }
   }, [task, reset]);
 
+  // Função chamada ao salvar o formulário
   const onSubmit = (data) => {
     if (task) {
       updateTask({ ...task, ...data });
@@ -41,8 +47,10 @@ export default function TaskFormScreen({ route, navigation }) {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
+          {/* Título da tela */}
           <Text style={styles.title}>{task ? 'Editar Tarefa' : 'Nova Tarefa'}</Text>
 
+          {/* Campo de título */}
           <Text style={styles.label}>Título</Text>
           <Controller
             control={control}
@@ -61,6 +69,7 @@ export default function TaskFormScreen({ route, navigation }) {
           />
           {errors.title && <Text style={styles.error}>{errors.title.message}</Text>}
 
+          {/* Campo de descrição */}
           <Text style={styles.label}>Descrição</Text>
           <Controller
             control={control}
@@ -81,6 +90,7 @@ export default function TaskFormScreen({ route, navigation }) {
           />
           {errors.description && <Text style={styles.error}>{errors.description.message}</Text>}
 
+          {/* Botão de salvar */}
           <TouchableOpacity
             style={styles.button}
             onPress={handleSubmit(onSubmit)}
@@ -90,6 +100,7 @@ export default function TaskFormScreen({ route, navigation }) {
             <Text style={styles.buttonText}>Salvar</Text>
           </TouchableOpacity>
 
+          {/* Botão de cancelar */}
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => navigation.goBack()}
@@ -104,6 +115,7 @@ export default function TaskFormScreen({ route, navigation }) {
   );
 }
 
+// Estilos da tela de formulário de tarefa
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,

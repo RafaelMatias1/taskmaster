@@ -3,13 +3,18 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform } from '
 import { useTasks } from '../contexts/TaskContext';
 import { useNavigation } from '@react-navigation/native';
 
+// Obtém a largura da tela para responsividade
 const { width } = Dimensions.get('window');
+
+// Ordem dos status para navegação no Kanban
 const statusOrder = ['todo', 'doing', 'done'];
 
+// Componente de item de tarefa
 export default function TaskListItem({ task, kanban, size = 'large' }) {
   const { removeTask, updateTask } = useTasks();
   const navigation = useNavigation();
 
+  // Função para mover a tarefa para trás no Kanban
   const moveBack = () => {
     const idx = statusOrder.indexOf(task.status);
     if (idx > 0) {
@@ -17,6 +22,7 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
     }
   };
 
+  // Função para mover a tarefa para frente no Kanban
   const moveForward = () => {
     const idx = statusOrder.indexOf(task.status);
     if (idx < statusOrder.length - 1) {
@@ -26,12 +32,18 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
 
   return (
     <View style={styles.item}>
+      {/* Título da tarefa */}
       <Text style={styles.title} numberOfLines={1} accessibilityRole="header">{task.title}</Text>
+
+      {/* Descrição aparece em tamanhos médio e grande */}
       {(size === 'medium' || size === 'large') && (
         <Text style={styles.description} numberOfLines={2}>{task.description}</Text>
       )}
+
+      {/* Botões só aparecem no tamanho grande */}
       {size === 'large' && (
         <View style={styles.buttonRow}>
+          {/* Botão de mover para trás (Kanban) */}
           {kanban && (
             <TouchableOpacity
               onPress={moveBack}
@@ -44,6 +56,8 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
               <Text style={[styles.moveText, task.status === 'todo' && styles.disabled]}>◀️</Text>
             </TouchableOpacity>
           )}
+
+          {/* Botão de editar tarefa */}
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => navigation.navigate('EditTask', { task })}
@@ -52,6 +66,8 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
           >
             <Text style={styles.editText}>✏️</Text>
           </TouchableOpacity>
+
+          {/* Botão de excluir tarefa */}
           <TouchableOpacity
             style={styles.deleteButton}
             onPress={() => removeTask(task.id)}
@@ -60,6 +76,8 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
           >
             <Text style={styles.deleteText}>❌</Text>
           </TouchableOpacity>
+
+          {/* Botão de mover para frente (Kanban) */}
           {kanban && (
             <TouchableOpacity
               onPress={moveForward}
@@ -78,6 +96,7 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
   );
 }
 
+// Estilos do componente
 const styles = StyleSheet.create({
   item: {
     backgroundColor: '#fff',

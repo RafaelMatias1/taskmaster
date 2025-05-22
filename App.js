@@ -9,8 +9,10 @@ import TaskFormScreen from './src/screens/TaskFormScreen';
 import { TaskProvider } from './src/contexts/TaskContext';
 import ProfileScreen from './src/screens/ProfileScreen';
 
+// Cria o stack de navegação
 const Stack = createNativeStackNavigator();
 
+// Componente principal do app, envolve tudo nos providers de contexto
 export default function App() {
   return (
     <AuthProvider>
@@ -23,7 +25,7 @@ export default function App() {
   );
 }
 
-// ESTE COMPONENTE FOI MOVIDO PARA DENTRO DE App.js
+// Componente de rotas, decide quais telas mostrar conforme login
 function Routes() {
   const { user } = useAuth();
 
@@ -41,6 +43,7 @@ function Routes() {
       }}
     >
       {user ? (
+        // Rotas privadas (usuário autenticado)
         <>
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
@@ -62,6 +65,7 @@ function Routes() {
           />
         </>
       ) : (
+        // Rotas públicas (login e registro)
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />

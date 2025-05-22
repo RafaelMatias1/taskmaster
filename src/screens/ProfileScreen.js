@@ -3,14 +3,18 @@ import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Dimensions 
 import { useAuth } from '../contexts/AuthContext';
 import { MaterialIcons, Feather } from '@expo/vector-icons';
 
+// Pega a largura da tela para responsividade
 const { width } = Dimensions.get('window');
 
+// Tela de perfil do usuário
 export default function ProfileScreen({ navigation }) {
+  // Hooks e estados do contexto de autenticação
   const { user, updateUser, deleteUser, logout } = useAuth();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
 
+  // Salva as alterações do perfil
   function handleSave() {
     if (!name.trim() || !email.trim()) {
       Alert.alert('Erro', 'Nome e e-mail são obrigatórios.');
@@ -21,6 +25,7 @@ export default function ProfileScreen({ navigation }) {
     Alert.alert('Sucesso', 'Perfil atualizado!');
   }
 
+  // Confirmação e exclusão da conta
   function handleDelete() {
     Alert.alert(
       'Confirmar exclusão',
@@ -42,8 +47,10 @@ export default function ProfileScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
+        {/* Ícone e título */}
         <Feather name="user" size={width * 0.13} color="#6200ee" style={{ alignSelf: 'center', marginBottom: 10 }} />
         <Text style={styles.title}>Meu Perfil</Text>
+        {/* Formulário de edição */}
         {editing ? (
           <>
             <Text style={styles.label}>Nome</Text>
@@ -77,6 +84,7 @@ export default function ProfileScreen({ navigation }) {
           </>
         ) : (
           <>
+            {/* Exibição dos dados do usuário */}
             <View style={styles.infoRow}>
               <Feather name="user" size={20} color="#6200ee" />
               <Text style={styles.info}>{user?.name}</Text>
@@ -98,10 +106,12 @@ export default function ProfileScreen({ navigation }) {
           </>
         )}
       </View>
+      {/* Botão para sair da conta */}
       <TouchableOpacity style={styles.logoutButton} onPress={logout} accessibilityLabel="Sair da conta" activeOpacity={0.7}>
         <Feather name="log-out" size={20} color="#fff" />
         <Text style={styles.logoutButtonText}>Sair</Text>
       </TouchableOpacity>
+      {/* Botão para voltar para a Home */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
         <Feather name="arrow-left" size={20} color="#fff" />
         <Text style={styles.backButtonText}>Voltar</Text>
@@ -110,6 +120,7 @@ export default function ProfileScreen({ navigation }) {
   );
 }
 
+// Estilos da tela de perfil
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5', alignItems: 'center', justifyContent: 'center', padding: width * 0.06 },
   card: {

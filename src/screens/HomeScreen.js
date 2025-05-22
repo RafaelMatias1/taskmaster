@@ -4,18 +4,22 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../contexts/TaskContext';
 import TaskListItem from '../components/TaskListItem';
 
+// Pega a largura da tela para responsividade
 const { width } = Dimensions.get('window');
 
+// Tela principal (Home) do app
 export default function HomeScreen({ navigation }) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { tasks, viewMode, setViewMode, addTask } = useTasks();
 
+  // Estado para controlar o tamanho das colunas do Kanban
   const [columnSizes, setColumnSizes] = useState({
     todo: 'small',
     doing: 'small',
     done: 'small'
   });
 
+  // Adiciona uma tarefa de boas-vindas se não existir
   useEffect(() => {
     if (!tasks.some(t => t.welcome)) {
       addTask({
@@ -27,6 +31,7 @@ export default function HomeScreen({ navigation }) {
     }
   }, [tasks, addTask]);
 
+  // Alterna o tamanho da coluna (small, medium, large)
   function toggleColumnSize(column) {
     setColumnSizes(prev => {
       const order = ['small', 'medium', 'large'];
@@ -36,7 +41,7 @@ export default function HomeScreen({ navigation }) {
     });
   }
 
-  // Função para renderizar o título da coluna com a bolinha indicadora acima do título
+  // Renderiza o título da coluna com a bolinha indicadora acima do texto
   function renderKanbanColumnTitle(title, size) {
     let indicatorStyle = styles.sizeIndicatorSmall;
     if (size === 'medium') indicatorStyle = styles.sizeIndicatorMedium;
@@ -52,11 +57,13 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Cabeçalho com boas-vindas e botão de perfil */}
       <View style={styles.header}>
         <Text style={styles.welcome}>Bem-vindo, {user?.name}!</Text>
         <Button title="Perfil" onPress={() => navigation.navigate('Profile')} />
       </View>
 
+      {/* Seletor de modo de visualização */}
       <View style={styles.viewModeSelector}>
         <TouchableOpacity
           style={[styles.viewModeButton, viewMode === 'list' && styles.activeViewMode]}
@@ -76,6 +83,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {/* Renderiza lista ou kanban */}
       {viewMode === 'list' ? (
         <FlatList
           data={tasks}
@@ -166,6 +174,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       )}
 
+      {/* Botão flutuante para adicionar nova tarefa */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('AddTask')}
@@ -178,6 +187,7 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
+// Estilos da tela Home
 const styles = StyleSheet.create({
   container: {
     flex: 1,
