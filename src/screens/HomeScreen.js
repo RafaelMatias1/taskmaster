@@ -19,6 +19,8 @@ export default function HomeScreen({ navigation }) {
     done: 'small'
   });
 
+  const [expandedColumn, setExpandedColumn] = useState('todo'); // Começa expandida em "A Fazer"
+
   // Adiciona uma tarefa de boas-vindas se não existir
   useEffect(() => {
     if (!tasks.some(t => t.welcome)) {
@@ -93,13 +95,18 @@ export default function HomeScreen({ navigation }) {
         />
       ) : (
         <View style={styles.kanbanContainer}>
-          {['todo', 'doing', 'done'].map((status, idx) => (
-            <View
+          {['todo', 'doing', 'done'].map((status) => (
+            <TouchableOpacity
               key={status}
+              activeOpacity={0.95}
               style={[
                 styles.kanbanColumn,
                 styles[`kanbanColumn_${status}`],
+                expandedColumn === status
+                  ? styles.kanbanColumnExpanded
+                  : styles.kanbanColumnCollapsed,
               ]}
+              onPress={() => setExpandedColumn(status)}
             >
               <View style={styles.kanbanColumnHeader}>
                 <Text style={styles.kanbanColumnIcon}>
@@ -107,7 +114,7 @@ export default function HomeScreen({ navigation }) {
                   {status === 'doing' && '⏳'}
                   {status === 'done' && '✅'}
                 </Text>
-                <Text style={styles.kanbanColumnTitle}>
+                <Text style={styles.kanbanColumnTitle} numberOfLines={1} ellipsizeMode="tail">
                   {status === 'todo' && 'A Fazer'}
                   {status === 'doing' && 'Em Progresso'}
                   {status === 'done' && 'Concluída'}
@@ -125,7 +132,7 @@ export default function HomeScreen({ navigation }) {
                     />
                   ))}
               </ScrollView>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       )}
@@ -230,8 +237,9 @@ const styles = StyleSheet.create({
   },
   kanbanColumnTitle: {
     fontWeight: 'bold',
-    fontSize: width * 0.045,
+    fontSize: width * 0.038, // era 0.045
     color: '#333',
+    flexShrink: 1, // permite quebrar linha se necessário
   },
   kanbanList: {
     flexGrow: 1,
