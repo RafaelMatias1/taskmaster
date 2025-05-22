@@ -2,11 +2,11 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
-import { TaskProvider } from './src/contexts/TaskContext';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TaskFormScreen from './src/screens/TaskFormScreen';
+import { TaskProvider } from './src/contexts/TaskContext';
 import ProfileScreen from './src/screens/ProfileScreen';
 
 // Cria o stack de navegação
@@ -45,8 +45,8 @@ function Routes() {
       {user ? (
         // Rotas privadas (usuário autenticado)
         <>
+          <Stack.Screen name="Home" component={HomeScreen} />        
           <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen 
             name="AddTask" 
             component={TaskFormScreen} 
