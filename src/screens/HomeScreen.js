@@ -93,84 +93,40 @@ export default function HomeScreen({ navigation }) {
         />
       ) : (
         <View style={styles.kanbanContainer}>
-          {/* Coluna A Fazer */}
-          <TouchableOpacity
-            activeOpacity={0.95}
-            style={[
-              styles.kanbanColumn,
-              columnSizes.todo === 'large' && styles.kanbanColumnExpanded,
-              columnSizes.todo === 'medium' && styles.kanbanColumnMedium,
-              columnSizes.todo === 'small' && styles.kanbanColumnCollapsed,
-            ]}
-            onPress={() => toggleColumnSize('todo')}
-            accessibilityLabel="Expandir ou reduzir coluna A Fazer"
-          >
-            {renderKanbanColumnTitle('A Fazer', columnSizes.todo)}
-            <ScrollView style={styles.kanbanList}>
-              {tasks
-                .filter(t => t.status === 'todo' && !t.welcome)
-                .map(task => (
-                  <TaskListItem
-                    key={task.id}
-                    task={task}
-                    kanban={true}
-                    size={columnSizes.todo}
-                  />
-                ))}
-            </ScrollView>
-          </TouchableOpacity>
-          {/* Coluna Em Progresso */}
-          <TouchableOpacity
-            activeOpacity={0.95}
-            style={[
-              styles.kanbanColumn,
-              columnSizes.doing === 'large' && styles.kanbanColumnExpanded,
-              columnSizes.doing === 'medium' && styles.kanbanColumnMedium,
-              columnSizes.doing === 'small' && styles.kanbanColumnCollapsed,
-            ]}
-            onPress={() => toggleColumnSize('doing')}
-            accessibilityLabel="Expandir ou reduzir coluna Em Progresso"
-          >
-            {renderKanbanColumnTitle('Em Progresso', columnSizes.doing)}
-            <ScrollView style={styles.kanbanList}>
-              {tasks
-                .filter(t => t.status === 'doing' && !t.welcome)
-                .map(task => (
-                  <TaskListItem
-                    key={task.id}
-                    task={task}
-                    kanban={true}
-                    size={columnSizes.doing}
-                  />
-                ))}
-            </ScrollView>
-          </TouchableOpacity>
-          {/* Coluna Concluída */}
-          <TouchableOpacity
-            activeOpacity={0.95}
-            style={[
-              styles.kanbanColumn,
-              columnSizes.done === 'large' && styles.kanbanColumnExpanded,
-              columnSizes.done === 'medium' && styles.kanbanColumnMedium,
-              columnSizes.done === 'small' && styles.kanbanColumnCollapsed,
-            ]}
-            onPress={() => toggleColumnSize('done')}
-            accessibilityLabel="Expandir ou reduzir coluna Concluída"
-          >
-            {renderKanbanColumnTitle('Concluída', columnSizes.done)}
-            <ScrollView style={styles.kanbanList}>
-              {tasks
-                .filter(t => t.status === 'done' && !t.welcome)
-                .map(task => (
-                  <TaskListItem
-                    key={task.id}
-                    task={task}
-                    kanban={true}
-                    size={columnSizes.done}
-                  />
-                ))}
-            </ScrollView>
-          </TouchableOpacity>
+          {['todo', 'doing', 'done'].map((status, idx) => (
+            <View
+              key={status}
+              style={[
+                styles.kanbanColumn,
+                styles[`kanbanColumn_${status}`],
+              ]}
+            >
+              <View style={styles.kanbanColumnHeader}>
+                <Text style={styles.kanbanColumnIcon}>
+                  {status === 'todo' && '📝'}
+                  {status === 'doing' && '⏳'}
+                  {status === 'done' && '✅'}
+                </Text>
+                <Text style={styles.kanbanColumnTitle}>
+                  {status === 'todo' && 'A Fazer'}
+                  {status === 'doing' && 'Em Progresso'}
+                  {status === 'done' && 'Concluída'}
+                </Text>
+              </View>
+              <ScrollView style={styles.kanbanList} contentContainerStyle={{ paddingBottom: 16 }}>
+                {tasks
+                  .filter(t => t.status === status && !t.welcome)
+                  .map(task => (
+                    <TaskListItem
+                      key={task.id}
+                      task={task}
+                      kanban={true}
+                      size="large"
+                    />
+                  ))}
+              </ScrollView>
+            </View>
+          ))}
         </View>
       )}
 
@@ -237,16 +193,48 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+    gap: 10,
     paddingBottom: width * 0.04,
   },
   kanbanColumn: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    padding: width * 0.02,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 16,
     marginHorizontal: 4,
     minHeight: 100,
     maxHeight: '100%',
+    padding: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+  },
+  kanbanColumn_todo: {
+    backgroundColor: '#e3f2fd',
+  },
+  kanbanColumn_doing: {
+    backgroundColor: '#fffde7',
+  },
+  kanbanColumn_done: {
+    backgroundColor: '#e8f5e9',
+  },
+  kanbanColumnHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 6,
+  },
+  kanbanColumnIcon: {
+    fontSize: 22,
+  },
+  kanbanColumnTitle: {
+    fontWeight: 'bold',
+    fontSize: width * 0.045,
+    color: '#333',
+  },
+  kanbanList: {
+    flexGrow: 1,
   },
   kanbanColumnExpanded: {
     flex: 3,
@@ -265,11 +253,6 @@ const styles = StyleSheet.create({
   kanbanColumnTitleContainer: {
     alignItems: 'center',
     marginBottom: 8,
-  },
-  kanbanColumnTitle: {
-    fontWeight: 'bold',
-    fontSize: width * 0.04,
-    alignSelf: 'center',
   },
   sizeIndicator: {
     marginBottom: 6,
@@ -290,10 +273,6 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     backgroundColor: '#388e3c',
-  },
-  kanbanList: {
-    flexGrow: 1,
-    marginBottom: 8,
   },
   addButton: {
     position: 'absolute',
