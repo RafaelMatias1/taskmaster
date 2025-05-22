@@ -49,7 +49,7 @@ taskmaster/
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/RafaelMatias1/taskmaster.git
+git clone https://github.com/RafaelMatias1/taskmaster
 cd taskmaster
 ```
 
