@@ -43,7 +43,11 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
             <Text style={styles.moveText}>◀️</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.content} onPress={showDetails} activeOpacity={0.6}>
+        <TouchableOpacity
+          style={styles.content}
+          onPress={kanban ? showDetails : undefined}
+          activeOpacity={kanban ? 0.6 : 1}
+        >
           <Text
             style={styles.title}
             numberOfLines={2}
@@ -51,6 +55,12 @@ export default function TaskListItem({ task, kanban, size = 'large' }) {
           >
             {task.title}
           </Text>
+          {/* Só mostra a descrição se NÃO estiver no kanban */}
+          {!kanban && !!task.description && (
+            <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
+              {task.description}
+            </Text>
+          )}
         </TouchableOpacity>
         {kanban && task.status !== 'done' && (
           <TouchableOpacity

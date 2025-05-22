@@ -21,18 +21,6 @@ export default function HomeScreen({ navigation }) {
 
   const [expandedColumn, setExpandedColumn] = useState('todo'); // Começa expandida em "A Fazer"
 
-  // Adiciona uma tarefa de boas-vindas se não existir
-  useEffect(() => {
-    if (!tasks.some(t => t.welcome)) {
-      addTask({
-        title: 'Bem-vindo ao TaskMaster!',
-        description: 'Toque no botão "+" para criar sua primeira tarefa. Você pode editar ou excluir tarefas a qualquer momento.',
-        status: 'todo',
-        welcome: true
-      });
-    }
-  }, [tasks, addTask]);
-
   // Alterna o tamanho da coluna (small, medium, large)
   function toggleColumnSize(column) {
     setColumnSizes(prev => {
