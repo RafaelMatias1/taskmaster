@@ -107,12 +107,12 @@ export default function ProfileScreen({ navigation }) {
         )}
       </View>
       {/* Botão para sair da conta */}
-      <TouchableOpacity style={styles.logoutButton} onPress={logout} accessibilityLabel="Sair da conta" activeOpacity={0.7}>
+      <TouchableOpacity style={styles.actionButton} onPress={logout} accessibilityLabel="Sair da conta" activeOpacity={0.7}>
         <Feather name="log-out" size={20} color="#fff" />
         <Text style={styles.logoutButtonText}>Sair</Text>
       </TouchableOpacity>
       {/* Botão para voltar para a Home */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Home')}>
         <Feather name="arrow-left" size={20} color="#fff" />
         <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
@@ -247,5 +247,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: width * 0.045,
     marginLeft: 10,
+  },
+  actionButton: {
+    marginTop: 18,
+    backgroundColor: '#6200ee',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 36,
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });

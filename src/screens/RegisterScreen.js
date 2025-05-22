@@ -28,6 +28,7 @@ export default function RegisterScreen({ navigation }) {
   const onSubmit = async (data) => {
     try {
       await register(data.name, data.email, data.password);
+      navigation.replace('Home'); // Redireciona para a Home após registrar
     } catch (error) {
       // Erro tratado no contexto de autenticação
     }

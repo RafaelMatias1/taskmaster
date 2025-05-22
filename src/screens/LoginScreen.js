@@ -27,6 +27,7 @@ export default function LoginScreen({ navigation }) {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
+      navigation.replace('Home'); // Redireciona para a Home após login
     } catch (error) {
       // Erro tratado no contexto de autenticação
     }
