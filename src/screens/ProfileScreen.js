@@ -107,7 +107,7 @@ export default function ProfileScreen({ navigation }) {
         )}
       </View>
       {/* Botão para sair da conta */}
-      <TouchableOpacity style={styles.actionButton} onPress={logout} accessibilityLabel="Sair da conta" activeOpacity={0.7}>
+      <TouchableOpacity style={styles.logoutButton} onPress={logout} accessibilityLabel="Sair da conta" activeOpacity={0.7}>
         <Feather name="log-out" size={20} color="#fff" />
         <Text style={styles.logoutButtonText}>Sair</Text>
       </TouchableOpacity>
