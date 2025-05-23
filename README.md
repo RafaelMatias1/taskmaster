@@ -74,7 +74,7 @@ const newTask = { id: Date.now(), title, description, completed: false };
 
 📦 Instalação e Execução
 Pré-requisitos
-Node.js >= 18.x
+Node.js  (`v22.14.0`)
 
 Expo CLI (npm install -g expo-cli)
 
